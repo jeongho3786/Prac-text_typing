@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  align-items: center;
+  border-style: solid;
+}
+
+.input-text {
+  font-size: 30px;
+}
+
+.blinking-text {
+  font-size: 40px;
+}
