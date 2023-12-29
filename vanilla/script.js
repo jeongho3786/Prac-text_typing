@@ -1,24 +1,32 @@
-const typing = (text, speed = 80) => {
-  const textElement = document.querySelector(".input-text");
-  const cursorElement = document.querySelector(".blinking-text");
+const typing = (text, speed = 80, delay = 2000) => {
+  const textElement = document.querySelector(".inputText");
+  const cursorElement = document.querySelector(".blinkingText");
   let count = 0;
 
-  setInterval(() => {
-    if (text.length === count) {
-      cursorElement.classList.add("blink-cursor");
-      return;
-    }
+  setTimeout(() => {
+    setInterval(() => {
+      cursorElement.classList.remove("blinkCursor");
 
-    textElement.textContent += text[count];
+      if (text.length === count) {
+        cursorElement.classList.add("blinkCursor");
+        return;
+      }
 
-    count++;
-  }, speed);
+      textElement.textContent += text[count];
+
+      count++;
+    }, speed);
+  }, delay);
 };
 
 const init = () => {
-  window.addEventListener("load", () =>
-    typing("안녕하세요. 저는 냉면을 좋아합니다.")
-  );
+  typing("안녕하세요. 저는 냉면을 좋아합니다.");
 };
 
 init();
+
+/*
+  먼저 커서가 깜빡인다.
+  글자가 들어가면 깜박임을 멈추고 글자 뒤에 붙는다.
+  글자가 끝나면 다시 깜빡인다.
+*/
