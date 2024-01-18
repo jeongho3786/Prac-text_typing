@@ -2,12 +2,14 @@ import type { PaintText } from "../type";
 import { Queue } from "./queue";
 
 interface PutInDataProps {
-  handler: (textData: PaintText) => void;
+  handler: (textData: PaintText) => Promise<unknown>;
   textData: PaintText;
 }
 
 export class TypingEventController extends Queue<PaintText> {
-  private handlePaintingText: ((textData: PaintText) => void) | null;
+  private handlePaintingText:
+    | ((textData: PaintText) => Promise<unknown>)
+    | null;
 
   constructor() {
     super();
@@ -26,12 +28,12 @@ export class TypingEventController extends Queue<PaintText> {
     this.repeatTakeOutData();
   }
 
-  private repeatTakeOutData() {
+  private async repeatTakeOutData() {
     if (!this.handlePaintingText) return;
 
     const deleteData = super.dequeue();
 
-    this.handlePaintingText(deleteData);
+    await this.handlePaintingText(deleteData);
 
     if (super.isEmpty()) {
       return;

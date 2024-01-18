@@ -12,19 +12,22 @@ const Typing = ({ text }: TypingProps) => {
   const textTagRef = useRef<HTMLSpanElement>(null);
 
   const handlePaintText = useCallback(
-    (tag: HTMLSpanElement, slicedText: string) => {
-      let count = 0;
+    async (tag: HTMLSpanElement, slicedText: string) => {
+      return new Promise((resolve) => {
+        let count = 0;
 
-      const interval = setInterval(() => {
-        if (slicedText.length === count) {
-          clearInterval(interval);
-          return;
-        }
+        const interval = setInterval(() => {
+          if (slicedText.length === count) {
+            clearInterval(interval);
+            resolve(null);
+            return;
+          }
 
-        tag.textContent += slicedText[count];
+          tag.textContent += slicedText[count];
 
-        count++;
-      }, 100);
+          count++;
+        });
+      });
     },
     []
   );
