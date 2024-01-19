@@ -19,11 +19,11 @@ export class Queue<TData> {
   }
 
   dequeue() {
-    const delData = this.storage[this.front];
-
     delete this.storage[this.front];
     this.front++;
+  }
 
-    return delData;
+  getDelTarget() {
+    return this.storage[this.front];
   }
 }

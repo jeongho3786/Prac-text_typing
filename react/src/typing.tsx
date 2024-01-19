@@ -3,21 +3,22 @@ import { TypingEventController } from "./class/typing-event-controller";
 
 interface TypingProps {
   text: string;
+  speed?: number;
 }
 
 const TypingController = new TypingEventController();
 
-const Typing = ({ text }: TypingProps) => {
+const Typing = ({ text, speed = 100 }: TypingProps) => {
   const prevTextLengthRef = useRef<null | number>(null);
   const textTagRef = useRef<HTMLSpanElement>(null);
 
   const handlePaintText = useCallback(
-    async (tag: HTMLSpanElement, slicedText: string) => {
+    async (tag: HTMLSpanElement, slicedText: string, speed: number) => {
       return new Promise((resolve) => {
         let count = 0;
 
         const interval = setInterval(() => {
-          if (slicedText.length === count) {
+          if (count === slicedText.length) {
             clearInterval(interval);
             resolve(null);
             return;
@@ -26,7 +27,7 @@ const Typing = ({ text }: TypingProps) => {
           tag.textContent += slicedText[count];
 
           count++;
-        });
+        }, speed);
       });
     },
     []
@@ -34,19 +35,19 @@ const Typing = ({ text }: TypingProps) => {
 
   useEffect(() => {
     const textTag = textTagRef.current;
-    const prevTextLength = prevTextLengthRef.current;
 
     if (!textTag) return;
 
+    const prevTextLength = prevTextLengthRef.current;
     const printText = text.slice(prevTextLength ?? 0, text.length);
 
     prevTextLengthRef.current = text.length;
 
     TypingController.putInData({
-      handler: () => handlePaintText(textTag, printText),
+      handler: () => handlePaintText(textTag, printText, speed),
       textData: printText,
     });
-  }, [text, handlePaintText]);
+  }, [text, speed, handlePaintText]);
 
   return <span ref={textTagRef} />;
 };

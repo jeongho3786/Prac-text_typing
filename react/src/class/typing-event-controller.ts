@@ -19,25 +19,24 @@ export class TypingEventController extends Queue<PaintText> {
   putInData({ handler, textData }: PutInDataProps) {
     this.handlePaintingText = handler;
 
-    if (!super.isEmpty()) {
+    if (super.isEmpty()) {
       super.enqueue(textData);
+      this.repeatTakeOutData();
       return;
     }
 
     super.enqueue(textData);
-    this.repeatTakeOutData();
   }
 
   private async repeatTakeOutData() {
     if (!this.handlePaintingText) return;
 
-    const deleteData = super.dequeue();
+    const deleteData = super.getDelTarget();
 
     await this.handlePaintingText(deleteData);
+    super.dequeue();
 
-    if (super.isEmpty()) {
-      return;
-    }
+    if (super.isEmpty()) return;
 
     this.repeatTakeOutData();
   }
