@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useRef } from "react";
+import { CSSProperties, useCallback, useEffect, useRef } from "react";
 import { TypingEventController } from "./class/typing-event-controller";
+import moduleStyles from "./typing.module.css";
 
 interface TypingProps {
   text: string;
   speed?: number;
+  style?: CSSProperties;
 }
 
 const TypingController = new TypingEventController();
 
-const Typing = ({ text, speed = 100 }: TypingProps) => {
+const Typing = ({ text, speed = 100, style }: TypingProps) => {
   const prevTextLengthRef = useRef<null | number>(null);
   const textTagRef = useRef<HTMLSpanElement>(null);
 
@@ -17,8 +19,11 @@ const Typing = ({ text, speed = 100 }: TypingProps) => {
       return new Promise((resolve) => {
         let count = 0;
 
+        tag.classList.remove(moduleStyles["cursor-blinking"]);
+
         const interval = setInterval(() => {
           if (count === slicedText.length) {
+            tag.classList.add(moduleStyles["cursor-blinking"]);
             clearInterval(interval);
             resolve(null);
             return;
@@ -49,7 +54,13 @@ const Typing = ({ text, speed = 100 }: TypingProps) => {
     });
   }, [text, speed, handlePaintText]);
 
-  return <span ref={textTagRef} />;
+  return (
+    <span
+      ref={textTagRef}
+      className={moduleStyles.cursor}
+      style={{ ...style }}
+    />
+  );
 };
 
 export default Typing;

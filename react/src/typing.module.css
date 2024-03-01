@@ -1,0 +1,13 @@
+@keyframes blinking {
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor::after {
+  content: "|";
+}
+
+.cursor-blinking::after {
+  animation: blinking step-end 1s infinite;
+}
